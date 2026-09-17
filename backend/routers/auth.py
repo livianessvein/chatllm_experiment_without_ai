@@ -1,7 +1,9 @@
 from __future__ import annotations
+from xml.dom.minidom import Text
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials
+from sqlalchemy import Column
 from sqlalchemy.orm import Session
 
 from backend.auth import (
@@ -37,6 +39,7 @@ def signup(payload: SignupRequest, db: Session = Depends(get_db)):
     user = User(
         email=payload.email,
         hashed_password=hash_password(payload.password),
+        custom_instructions = Column(Text, nullable=True, default=None)
     )
     db.add(user)
     db.commit()
